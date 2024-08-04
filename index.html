@@ -16,9 +16,15 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
+            overflow: hidden;
+            position: relative;
         }
         h1 {
             color: #007bff;
+            z-index: 2;
+        }
+        textarea, button, #results {
+            z-index: 2;
         }
         textarea {
             width: 80%;
@@ -74,9 +80,38 @@
         #results ul li a:hover {
             color: #0056b3;
         }
+        /* Background animation styles */
+        #animation-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: float 15s linear infinite;
+        }
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) scale(0.5);
+                opacity: 0.1;
+            }
+            100% {
+                transform: translateY(-100vh) scale(1);
+                opacity: 0.6;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Background animation container -->
+    <div id="animation-container"></div>
+
     <!-- Title of the page -->
     <h1>URL Shortener</h1>
     <!-- Text area for user to input URLs, one per line -->
@@ -157,6 +192,37 @@
                     <br>`;
             }).join('');
         }
+
+        /**
+         * Creates a random floating circle element.
+         * @return {HTMLElement} The created circle element.
+         */
+        function createCircle() {
+            const circle = document.createElement('div');
+            const size = Math.random() * 60 + 10; // Circle size between 10px and 70px
+            circle.className = 'circle';
+            circle.style.width = `${size}px`;
+            circle.style.height = `${size}px`;
+            circle.style.left = `${Math.random() * 100}%`;
+            circle.style.animationDuration = `${Math.random() * 20 + 10}s`; // Animation duration between 10s and 30s
+            circle.style.backgroundColor = `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.7)`;
+            return circle;
+        }
+
+        /**
+         * Adds a specified number of circles to the animation container.
+         * @param {number} numCircles - The number of circles to add.
+         */
+        function addCircles(numCircles) {
+            const container = document.getElementById('animation-container');
+            for (let i = 0; i < numCircles; i++) {
+                const circle = createCircle();
+                container.appendChild(circle);
+            }
+        }
+
+        // Add 30 circles to the background on page load
+        window.onload = () => addCircles(30);
     </script>
 </body>
 </html>
